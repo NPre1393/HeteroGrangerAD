@@ -70,7 +70,7 @@ for i = 1:p
         elseif ismember(i, I_p)==1  	
             % fitting procedure returns parameters and confidence intervals
             [l, lci] = poissfit(cur_ref_series(i,:));
-       		ref_anomaly_scores(start) = PoissonAnomalyScore(cur_ref_series(i,:), sigma1, sigma2);
+       		ref_anomaly_scores(start) = PoissonAnomalyScore(cur_ref_series(i,:), mu1, mu2);
         elseif ismember(i, I_g)==1  	
             [ab, gci] = gamfit(cur_ref_series(i,:));
        		ref_anomaly_scores(start) = GammaAnomalyScore(cur_ref_series(i,:), 0, 0, 0, 0);    
@@ -135,7 +135,7 @@ for off_set = 0 : slide_times
       		%cur_anomaly_scores(i) = GaussianAnomalyScore(X_test, sigma1, sigma2, mu1, mu2);
             cur_anomaly_scores(i) = max(myAnomalyScore(sigma1, sigma2, mu1, mu2),myAnomalyScore(sigma2, sigma1, mu1, mu2));
         elseif ismember(i, I_p)==1  	
-       		cur_anomaly_scores(i) = PoissonAnomalyScore(X_test, mu1, mu2);
+       		cur_anomaly_scores(i) = PoissonAnomalyScore(X_test, sigma1, sigma2);
         elseif ismember(i, I_g)==1  	
             % TODO: calc gamma parameters for pdf a, b
        		cur_anomaly_scores(i) = GammaAnomalyScore(X_test, 0, 0, 0, 0);    
