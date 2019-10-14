@@ -1,11 +1,15 @@
 ************************************************************
 * Code for anomaly detection using Granger graphical models*
-* by Huida Qiu                                             *
+* original by Huida Qiu                                    *
+* adjusted by Niklas Preschern							   *
 ************************************************************
 
-granger_anomaly_detetion.m and granger_stoc_anomaly_detection.m are the main functions. The latter one uses stochastic methods for L1-regularized regression.
+granger_anomaly_detection contains the combined code from the papers
+Granger Causality for Time-Series Anomaly Detection and Granger Causality
+for Heterogeneous Processes
 
-The other functions and packages are required in these two main functions.
-
-TE_test_script.m and test_StocMethods.m show examples how to use the functions.
-
+differences:
+	- uses GLM instead of Lasso for finding temporal dependencies
+	- uses Jensen–Shannon divergence instead of Kullback–Leibler divergence for anomaly
+	  scores
+	- uses different anomaly scores for differently distributed timeseries
