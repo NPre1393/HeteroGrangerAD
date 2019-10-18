@@ -31,4 +31,8 @@ dep2(3,7) = 1;
 dep2(3,8) = 1;
 
 s1 = data_gen(10,3,dep1,200);
-%s2 = data_gen(3,2,dependencies2,100);
+s2 = data_gen(10,3,dep2,100);
+s = [s1 s2];
+G1 = digraph(dep1);
+G2 = digraph(dep2);
+save('Datatest1_10x300.txt', s);
