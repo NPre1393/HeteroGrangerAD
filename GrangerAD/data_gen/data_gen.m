@@ -68,7 +68,7 @@ for i = 1:deps_len2
     for j = n1:n1+n2
         % generates lagged values by multiplying dependency matrix
         % with the time series at t-lag:t to get correct values
-        lagged_vals = nonzeros(dependencies1(deps2(i),:).*series(:,j-lag:j-1)');
+        lagged_vals = nonzeros(dependencies2(deps2(i),:).*series(:,j-lag:j-1)');
         series(i,j) = sum(coeffs.*lagged_vals);
     end
 end
