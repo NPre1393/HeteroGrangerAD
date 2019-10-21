@@ -2,20 +2,24 @@ clear all;
 
 warning off;
 pctRunOnAll warning off;
-Filename = "syn_data/Testdataset_760_Poisson3_Normal2_Features5.mat";
+%Filename = "syn_data/Testdataset_760_Poisson3_Normal2_Features5.mat";
 %dir_name = 'C:\Users\Julien\Documents\Uni\Master\DataScience\pr\PR1\PR1\GrangerAD\GrangerAD\syn_data';
-dir_name = 'syn_data/gaussian';
-files = dir(fullfile(dir_name, '*.mat'));
+dir_name = 'syn_data/gaussian_GAD';
+%files = dir(fullfile(dir_name, '*.mat'));
+files = dir(fullfile(dir_name, '*.txt'));
 names = {files.name};
 names_cell = strcat(dir_name, '\', names); 
 
-T1 = 75;
-T2 = 150;
+%T1 = 75;
+%T2 = 150;
+T1 = 100;
+T2 = 200;
 window = 5;
 N = 7;
 % set lag as in Russel & Chiang:
-L = 2;
-lambda = 5;
+%L = 2;
+L = 3;
+lambda = 4;
 alpha = 0.95;
 %Filename = "syn_data/Testdataset_760_Poisson5_Normal0_Features5.mat"
 %train_file = 'TE_process/d03.dat';
@@ -27,9 +31,9 @@ alpha = 0.95;
 %[m,n] = size(ts_dists);
 for j=1:5
     %ind = [ts_dists{j}]
-    series_mat = load(char(names_cell(j)));
+    %series_mat = load(char(names_cell(j)));
 %series = load(Filename)
-    series = series_mat.series;
+    %series = series_mat.series;
     FinalResult = char(names(j))
 % add large number to 201st data point in every time series to make it
 % an anomaly
@@ -38,7 +42,9 @@ for j=1:5
     %series(1, 70) = series(i, 70)+1000;
 %end
 % data point at index 50 of test data is anomalous
-    series(2, 125) = series(2, 125)+10000;
+%    series(2, 125) = series(2, 125)+10000;
+    series = dlmread(char(names_cell(j)));
+    series(:, 201) = series(:, 201)+10000;
 %T1 = 125;
 %T2 = 240;
     %ind_poiss = cell2mat(ts_dists{1,i}{1,1});
@@ -46,9 +52,11 @@ for j=1:5
 
     I_B=[];
     I_g=[];
-    I_n=series_mat.I_n;
-    I_p=series_mat.I_p;
-
+    %I_n=series_mat.I_n;
+    %I_p=series_mat.I_p;
+    I_n = [1:10];
+    I_p = [];
+    
 %% do anomaly detection with a sliding window:
     disp('Granger GLM AD in progress...');
     %tic;

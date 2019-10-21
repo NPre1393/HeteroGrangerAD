@@ -45,7 +45,7 @@ for i = 1:deps_len
     % gernerate random coefficient matrix depending on
     % how many dependencies a feature has (eg 3 deps -> 3x3 coeff mat)
     % rounding to one decimal in range coeff_min to coeff_max
-    coeffs = round(coeff_min+rand(deps_per(i)*lag,1)*(coeff_max-coeff_min),1)
+    coeffs = round(coeff_min+rand(deps_per(i)*lag,1)*(coeff_max-coeff_min),1);
     % generate every value from 1 to n
     for j = 1:n1
         if j < lag+1
