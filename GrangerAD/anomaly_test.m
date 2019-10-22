@@ -4,7 +4,7 @@ warning off;
 pctRunOnAll warning off;
 %Filename = "syn_data/Testdataset_760_Poisson3_Normal2_Features5.mat";
 %dir_name = 'C:\Users\Julien\Documents\Uni\Master\DataScience\pr\PR1\PR1\GrangerAD\GrangerAD\syn_data';
-dir_name = 'syn_data/gaussian_GAD';
+dir_name = 'syn_data\gaussian_GAD';
 %files = dir(fullfile(dir_name, '*.mat'));
 files = dir(fullfile(dir_name, '*.txt'));
 names = {files.name};
@@ -14,11 +14,11 @@ names_cell = strcat(dir_name, '\', names);
 %T2 = 150;
 T1 = 100;
 T2 = 200;
-window = 5;
+window = 10;
 N = 7;
 % set lag as in Russel & Chiang:
 %L = 2;
-L = 3;
+L = 2;
 lambda = 4;
 alpha = 0.95;
 %Filename = "syn_data/Testdataset_760_Poisson5_Normal0_Features5.mat"

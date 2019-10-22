@@ -1,23 +1,27 @@
-dir_name1 = 'datatests/gaussian';
+dir_name1 = 'datatests/gaussian_GAD/w10_la4_L2';
+%dir_name1 = 'datatests/gaussian_GAD/w5_la4_L3';
+
 %dir_name1 = 'datatests/gaussian_other_config';
 files = dir(fullfile(dir_name1, '*.mat'));
 names = {files.name};
 names_cell = strcat(dir_name1, '\', names);
 
-T1 = 75;
-T2 = 150;
-%window2 = 5;
+%T1 = 75;
+%T2 = 150;
+T1 = 100;
+T2 = 200;
+%window1 = 5;
 window1 = 10;
 N = 7;
 % set lag as in Russel & Chiang:
-L = 2;
+L = 3;
 %lambda2 = 5;
 lambda1 = 4;
 alpha = 0.95;
-features = 5;
+features = 10;
 
 ground_truth = zeros(features, T2);
-ground_truth(2,50) = 1;
+ground_truth(:,101) = 1;
 
 % x = 1:225
 % figure;
@@ -35,7 +39,7 @@ f1_scores = zeros(1,10);
 precision = zeros(1,10);
 recall = zeros(1,10);
 
-for j = 1:10
+for j = 1:9
     series_mat = load(char(names_cell(j)));
     series = series_mat.series;
     FinalResult = char(names(j));
