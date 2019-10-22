@@ -12,8 +12,8 @@ anomaly_window = zeros(n,window_m);
 
 for i = 1:n
     index = 1;
-    for j = window_m:window1:m
-        avg_anomaly_score = mean(anomaly_scores(i,(j-window_m)+1:j));
+    for j = window1:window1:m
+        avg_anomaly_score = mean(anomaly_scores(i,(j-window1)+1:j));
         anomaly_window(i,index) = avg_anomaly_score;
         index = index+1;
     end

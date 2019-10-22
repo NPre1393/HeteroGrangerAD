@@ -72,18 +72,24 @@ end
 
 %% detect anomaly in test data
 %disp('testing...');
-test_coeffs = cell(p, slide_times+1);
-anomaly_scores = zeros(p, slide_times+1);
+test_coeffs = cell(p, (slide_times+1)/10);
+anomaly_scores = zeros(p, (slide_times+1)/10);
 
-for off_set = 0 : slide_times
+%for off_set = 0 : slide_times
+% window = 10
+tc_index = 0;
+
+for off_set = 0:10:slide_times
 	%disp(['sliding #' num2str(off_set)]);
 	
-	test_series = time_series(:, test_indices + off_set);
-
+	%test_series = time_series(:, test_indices + off_set);
+    test_series = time_series(:, test_indices + off_set);
+    
 	[temp, X_test] = ...
         ts_lasso_regression(test_series, lag, lambda, I_n, I_p, I_g, I_B);
 	for i = 1:p
-		test_coeffs{i, off_set+1}=temp{i};
+        test_coeffs{i, tc_index+1}=temp{i};
+		%test_coeffs{i, off_set+1}=temp{i};
 	end
 	
 
@@ -93,7 +99,8 @@ for off_set = 0 : slide_times
 		delta = mean(X_test)';
 		coeffs = reshape(ref_coeffs{i}', [], 1);
 		mu1 = coeffs' * delta;
-		coeffs = reshape(test_coeffs{i,off_set+1}', [], 1);
+		%coeffs = reshape(test_coeffs{i,off_set+1}', [], 1);
+        coeffs = reshape(test_coeffs{i,tc_index+1}', [], 1);
 		mu2 = coeffs' * delta;
 		
 % 		[~, T1] = size(ref_series);
@@ -116,8 +123,10 @@ for off_set = 0 : slide_times
 		
 		cur_anomaly_scores(i) = max(myAnomalyScore(sigma1, sigma2, mu1, mu2), ...
 			myAnomalyScore(sigma2, sigma1, mu2, mu1));
-		anomaly_scores(i, off_set+1) = cur_anomaly_scores(i);
-	end
+		%anomaly_scores(i, off_set+1) = cur_anomaly_scores(i);
+        anomaly_scores(i, tc_index+1) = cur_anomaly_scores(i);
+    end
+    tc_index = tc_index+1;
 end
 
 end
