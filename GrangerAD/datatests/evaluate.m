@@ -1,3 +1,4 @@
+clear all;
 dir_name1 = 'datatests/gaussian_GAD/w10_la4_L2';
 %dir_name1 = 'datatests/gaussian_GAD/w5_la4_L3';
 
@@ -20,8 +21,10 @@ lambda1 = 4;
 alpha = 0.95;
 features = 10;
 
-ground_truth = zeros(features, T2);
-ground_truth(:,101) = 1;
+%ground_truth = zeros(features, T2);
+%ground_truth(:,101) = 1;
+ground_truth = zeros(features, T2/window1);
+ground_truth(:,10) = 1;
 
 % x = 1:225
 % figure;
@@ -39,13 +42,14 @@ f1_scores = zeros(1,10);
 precision = zeros(1,10);
 recall = zeros(1,10);
 
-for j = 1:9
+for j = 1:10
     series_mat = load(char(names_cell(j)));
     series = series_mat.series;
     FinalResult = char(names(j));
     anom_scores = series_mat.granger_anomaly_scores_N;
     anom_thresholds = series_mat.granger_threshs_N;
-    [anomaly_mat,~] = eval_anomaly(anom_scores, anom_thresholds, 0);
+    %[anomaly_mat,~] = eval_anomaly(anom_scores, anom_thresholds, 0);
+    [anomaly_mat,~] = eval_anomaly_b(anom_scores, anom_thresholds, 0, window1);
     [f1_scores(j), precision(j), recall(j)] = Fmeasure(anomaly_mat, ground_truth);
 end
 f1_scores

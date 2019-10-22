@@ -1,4 +1,4 @@
-function [anomaly_mat, h] = eval_anomaly(anomaly_scores,thresholds, hm)
+function [anomaly_mat, h] = eval_anomaly_b(anomaly_scores,thresholds, hm, window1)
 %EVAL_ANOMALY uses threshold to find out if value at timepoint t
 %             is anomalous & plots heatmap if wanted
 % anomaly_scores - anomaly scores from anomaly detection algorithm dim [n x m]
@@ -7,10 +7,22 @@ function [anomaly_mat, h] = eval_anomaly(anomaly_scores,thresholds, hm)
 h = 0;
 [n, m] = size(anomaly_scores);
 
-anomaly_mat = anomaly_scores;
+window_m = m/window1;
+anomaly_window = zeros(n,window_m);
+
+for i = 1:n
+    index = 1;
+    for j = window_m:window1:m
+        avg_anomaly_score = mean(anomaly_scores(i,(j-window_m)+1:j));
+        anomaly_window(i,index) = avg_anomaly_score;
+        index = index+1;
+    end
+end
+
+anomaly_mat = zeros(n,window_m);
 for i=1:n
-    anomaly_mat(i,anomaly_scores(i,:)>=thresholds(i))=1;
-    anomaly_mat(i,anomaly_scores(i,:)<thresholds(i))=0;
+   anomaly_mat(i,anomaly_window(i,:)>=thresholds(i))=1;
+   anomaly_mat(i,anomaly_window(i,:)<thresholds(i))=0;
 end
 
 %imagesc((1:m)+0.5, (1:n)+0.5,anomaly_mat);
