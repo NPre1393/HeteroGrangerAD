@@ -1,7 +1,7 @@
 clear all;
 %dir_name1 = 'datatests/gaussian_GAD/w10_la4_L2_mu1mu2';
 %dir_name1 = 'datatests/gaussian_GAD/w5_la4_L3';
-dir_name1 = 'datatests/gaussian_GAD/adjusted_anom_score_mu1mu2';
+dir_name1 = 'datatests/gaussian_GAD/adjusted_anom_score/scaled_10x300_468';
 %dir_name1 = 'datatests/gaussian_other_config';
 files = dir(fullfile(dir_name1, '*.mat'));
 names = {files.name};
@@ -24,7 +24,7 @@ features = 10;
 %ground_truth = zeros(features, T2);
 %ground_truth(:,101) = 1;
 ground_truth = zeros(features, T2/window1);
-ground_truth(:,11) = 1;
+ground_truth(4:2:8,11) = 1;
 
 % x = 1:225
 % figure;
@@ -38,9 +38,9 @@ ground_truth(:,11) = 1;
 % hold on;
 % plot(x, series(5,:), 'm');
 % hold off;
-f1_scores = zeros(1,5);
-precision = zeros(1,5);
-recall = zeros(1,5);
+f1_scores = zeros(1,features);
+precision = zeros(1,features);
+recall = zeros(1,features);
 
 for j = 1:10
     series_mat = load(char(names_cell(j)));

@@ -32,7 +32,10 @@ coeff_max = 0.9;
 % generate time series that don't have any dependencies
 for i = 1:features
     if ~ismember(i,deps)
-        series(i,:) = normrnd(rand, rand, [1,n1+n2]);
+        %series(i,:) = normrnd(rand, rand, [1,n1+n2]);
+        mu = 1+rand*(1000-1);
+        sigma = 1+rand*(1000-1);
+        series(i,:) = normrnd(mu, sigma, [1,n1+n2]);
     end
     
 end
@@ -63,7 +66,7 @@ for i = 1:deps_len2
     % gernerate random coefficient matrix depending on
     % how many dependencies a feature has (eg 3 deps -> 3x3 coeff mat)
     % rounding to one decimal in range coeff_min to coeff_max
-    coeffs = round(coeff_min+rand(deps_per2(i)*lag,1)*(coeff_max-coeff_min),1)
+    coeffs = round(coeff_min+rand(deps_per2(i)*lag,1)*(coeff_max-coeff_min),1);
     % generate every value from 1 to n
     for j = n1:n1+n2
         % generates lagged values by multiplying dependency matrix

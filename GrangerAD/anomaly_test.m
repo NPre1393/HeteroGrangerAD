@@ -4,7 +4,7 @@ warning off;
 pctRunOnAll warning off;
 %Filename = "syn_data/Testdataset_760_Poisson3_Normal2_Features5.mat";
 %dir_name = 'C:\Users\Julien\Documents\Uni\Master\DataScience\pr\PR1\PR1\GrangerAD\GrangerAD\syn_data';
-dir_name = 'syn_data\gaussian_GAD';
+dir_name = 'syn_data\gaussian_GAD_scaled';
 %files = dir(fullfile(dir_name, '*.mat'));
 files = dir(fullfile(dir_name, '*.txt'));
 names = {files.name};
@@ -44,7 +44,10 @@ for j=1:5
 % data point at index 50 of test data is anomalous
 %    series(2, 125) = series(2, 125)+10000;
     series = dlmread(char(names_cell(j)));
-    series(:, 201) = series(:, 201)+10000;
+    series(4, 201) = series(1, 201)+10000;
+    series(6, 201) = series(1, 201)+10000;
+    series(8, 201) = series(1, 201)+10000;
+
 %T1 = 125;
 %T2 = 240;
     %ind_poiss = cell2mat(ts_dists{1,i}{1,1});
@@ -54,26 +57,25 @@ for j=1:5
     I_g=[];
     %I_n=series_mat.I_n;
     %I_p=series_mat.I_p;
-    I_n = [1:10];
+    I_n = 1:10;
     I_p = [];
     
 %% do anomaly detection with a sliding window:
-%     disp('Granger GLM AD in progress...');
-%     %tic;
-%     [granger_ref_coeffs_N, granger_test_coeffs_N, granger_anomaly_scores_N,granger_threshs_N] = ...
-%             granger_anomaly_detection_glm(series, L, 1:T1, T1+1-window+1:T1+1, T2-1, ...
-%             alpha, lambda,I_n, I_p, I_g, I_B);
+    disp('Granger GLM AD in progress...');
+    %tic;
+    [granger_ref_coeffs_N, granger_test_coeffs_N, granger_anomaly_scores_N,granger_threshs_N] = ...
+            granger_anomaly_detection_glm(series, L, 1:T1, T1+1-window+1:T1+1, T2-1, ...
+            alpha, lambda,I_n, I_p, I_g, I_B);
 
-    %save('Testdataset_760_Poisson5_Normal0_Features5_toResult.mat');
 
-%    save([FinalResult num2str(j)  '_GLM_Result.mat']);
+    save(['datatests/gaussian_GAD/adjusted_anom_score/scaled_10x300_468/',FinalResult num2str(j)  '_GLM_Result.mat']);
     disp('Granger -N AD in progress...');  
 	[granger_ref_coeffs_N, granger_test_coeffs_N, granger_anomaly_scores_N, ...
 		granger_threshs_N] = ...
 		granger_anomaly_detection(series, L, 1:T1, T1+1-window+1:T1+1, T2-1, ...
-		0.95, 1000, 2000, 800, 0);
-    
-    save([FinalResult num2str(j)  '_Lasso_Result.mat']);
+        alpha, 1000, 2000, 800, 0);	
+    %alpha, 1000, 2000, 800, 0);
+        
+    save(['datatests/gaussian_GAD/adjusted_anom_score/scaled_10x300_468/',FinalResult num2str(j)  '_Lasso_Result.mat']);
 
-%save(['TEP_d03_d03te_2_toResults.mat']);
 end

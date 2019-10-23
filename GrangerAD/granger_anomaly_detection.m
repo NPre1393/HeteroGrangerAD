@@ -45,8 +45,8 @@ for i = 1:p
 	for start = 1:T1-window_size+1
  		cur_ref_series = ref_series(:, start:start+window_size-1);
 		
- 		[cur_ref_coeffs, cur_PHI] = ...
- 			ts_lasso_ref_regression(cur_ref_series, lag, lambda1, ref_coeffs, lambda2, NC);
+ 		%[cur_ref_coeffs, cur_PHI] = ...
+ 		%	ts_lasso_ref_regression(cur_ref_series, lag, lambda1, ref_coeffs, lambda2, NC);
 % 		
 % 		[~, T2] = size(cur_ref_series);
 % 		pred_values = zeros(1, T2-lag);
@@ -57,12 +57,12 @@ for i = 1:p
 % 		sigma2 = sqrt(resid * resid' / length(resid));
 % 		
 % 		
- 		mu1 = reshape(ref_coeffs{i}', [], 1)' * mean(cur_PHI)';
- 		mu2 = reshape(cur_ref_coeffs{i}', [], 1)' * mean(cur_PHI)';
+ 		%mu1 = reshape(ref_coeffs{i}', [], 1)' * mean(cur_PHI)';
+ 		%mu2 = reshape(cur_ref_coeffs{i}', [], 1)' * mean(cur_PHI)';
 		
 		sigma2 = sqrt(var(cur_ref_series(i,:)));
-		ref_anomaly_scores(start) = max(myAnomalyScore(sigma1, sigma2, mu1, mu2), ...
-			myAnomalyScore(sigma2, sigma1, mu2, mu1));
+		ref_anomaly_scores(start) = max(myAnomalyScore(sigma1, sigma2, 0, 0), ...
+			myAnomalyScore(sigma2, sigma1, 0, 0));
 	end
 	%hist(ref_anomaly_scores);
 	para = expfit(ref_anomaly_scores);
