@@ -58,15 +58,15 @@ for j=1:5
     I_p = [];
     
 %% do anomaly detection with a sliding window:
-    disp('Granger GLM AD in progress...');
-    %tic;
-    [granger_ref_coeffs_N, granger_test_coeffs_N, granger_anomaly_scores_N,granger_threshs_N] = ...
-            granger_anomaly_detection_glm(series, L, 1:T1, T1+1-window+1:T1+1, T2-1, ...
-            alpha, lambda,I_n, I_p, I_g, I_B);
+%     disp('Granger GLM AD in progress...');
+%     %tic;
+%     [granger_ref_coeffs_N, granger_test_coeffs_N, granger_anomaly_scores_N,granger_threshs_N] = ...
+%             granger_anomaly_detection_glm(series, L, 1:T1, T1+1-window+1:T1+1, T2-1, ...
+%             alpha, lambda,I_n, I_p, I_g, I_B);
 
     %save('Testdataset_760_Poisson5_Normal0_Features5_toResult.mat');
 
-    save([FinalResult num2str(j)  '_GLM_Result.mat']);
+%    save([FinalResult num2str(j)  '_GLM_Result.mat']);
     disp('Granger -N AD in progress...');  
 	[granger_ref_coeffs_N, granger_test_coeffs_N, granger_anomaly_scores_N, ...
 		granger_threshs_N] = ...
