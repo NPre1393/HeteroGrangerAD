@@ -64,8 +64,8 @@ for i = 1:p
 		
 %       Continious Gaussian Time series        
         if ismember(i, I_n)==1
-      		%ref_anomaly_scores(start) = GaussianAnomalyScore(cur_ref_series(i,:), sigma1, sigma2, 0, 0);
-            ref_anomaly_scores(start) = max(myAnomalyScore(sigma1, sigma2, mu1, mu2),myAnomalyScore(sigma2, sigma1, mu1, mu2));
+      		ref_anomaly_scores(start) = GaussianAnomalyScore(cur_ref_series(i,:), sigma1, sigma2, 0, 0);
+            %ref_anomaly_scores(start) = max(myAnomalyScore(sigma1, sigma2, mu1, mu2),myAnomalyScore(sigma2, sigma1, mu1, mu2));
 
         elseif ismember(i, I_p)==1  	
             % fitting procedure returns parameters and confidence intervals
@@ -132,8 +132,8 @@ for off_set = 0 : slide_times
 		sigma2 = sqrt(var(test_series(i, :)));
 		
         if ismember(i, I_n)==1
-      		%cur_anomaly_scores(i) = GaussianAnomalyScore(X_test, sigma1, sigma2, mu1, mu2);
-            cur_anomaly_scores(i) = max(myAnomalyScore(sigma1, sigma2, mu1, mu2),myAnomalyScore(sigma2, sigma1, mu1, mu2));
+      		cur_anomaly_scores(i) = GaussianAnomalyScore(X_test, sigma1, sigma2, mu1, mu2);
+            %cur_anomaly_scores(i) = max(myAnomalyScore(sigma1, sigma2, mu1, mu2),myAnomalyScore(sigma2, sigma1, mu1, mu2));
         elseif ismember(i, I_p)==1  	
        		cur_anomaly_scores(i) = PoissonAnomalyScore(X_test, mu1, mu2);
         elseif ismember(i, I_g)==1  	

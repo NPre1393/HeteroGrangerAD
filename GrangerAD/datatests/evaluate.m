@@ -1,6 +1,6 @@
 clear all;
 %dir_name1 = 'datatests/gaussian_GAD/anom_score_mu1mu2/simple_dep_noanom_sliding'
-dir_name1 = 'datatests/gaussian_GAD/adjusted_anom_score_mu1mu2/simple_dep_noanom';
+dir_name1 = 'datatests/gaussian_GAD/anom_score_mu1mu2/GAD_noanom_sliding_JSD';
 %dir_name1 = 'datatests/gaussian_other_config';
 files = dir(fullfile(dir_name1, '*.mat'));
 names = {files.name};
@@ -18,12 +18,12 @@ L = 3;
 %lambda2 = 5;
 lambda1 = 4;
 alpha = 0.95;
-features = 10;
+features = 3;
 
-%ground_truth = zeros(features, T2);
-%ground_truth(1,1:100) = 1;
-ground_truth = zeros(features, T2/window1);
-ground_truth(1,1:10) = 1;
+ground_truth = zeros(features, T2);
+ground_truth(1:3,1:100) = 1;
+%ground_truth = zeros(features, T2/window1);
+%ground_truth(1,1:10) = 1;
 %ground_truth(4:2:8,11) = 1;
 
 % x = 1:225
@@ -42,7 +42,7 @@ f1_scores = zeros(1,features);
 precision = zeros(1,features);
 recall = zeros(1,features);
 
-for j = 1:10
+for j = 1:9
     series_mat = load(char(names_cell(j)));
     series = series_mat.series;
     FinalResult = char(names(j));

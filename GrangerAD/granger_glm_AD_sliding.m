@@ -62,8 +62,9 @@ for i = 1:p
  		%mu2 = reshape(cur_ref_coeffs{i}', [], 1)' * mean(cur_PHI)';
 
 		sigma2 = sqrt(var(cur_ref_series(i,:)));
-		ref_anomaly_scores(start) = max(myAnomalyScore(sigma1, sigma2, mu1, mu2), ...
-			myAnomalyScore(sigma2, sigma1, mu2, mu1));
+		%ref_anomaly_scores(start) = max(myAnomalyScore(sigma1, sigma2, mu1, mu2), ...
+		%	myAnomalyScore(sigma2, sigma1, mu2, mu1));
+        ref_anomaly_scores(start) = GaussianAnomalyScore(cur_ref_series(i,:), sigma1, sigma2, mu1, mu2);
 	end
 	%hist(ref_anomaly_scores);
 	para = expfit(ref_anomaly_scores);
@@ -110,8 +111,9 @@ for off_set = 0 : slide_times
 % 		sigma2 = sqrt(resid * resid' / length(resid));
 		sigma2 = sqrt(var(test_series(i, :)));
 		
-		cur_anomaly_scores(i) = max(myAnomalyScore(sigma1, sigma2, mu1, mu2), ...
-			myAnomalyScore(sigma2, sigma1, mu2, mu1));
+		%cur_anomaly_scores(i) = max(myAnomalyScore(sigma1, sigma2, mu1, mu2), ...
+		%	myAnomalyScore(sigma2, sigma1, mu2, mu1));
+        cur_anomaly_scores(i) = GaussianAnomalyScore(X_test, sigma1, sigma2, mu1, mu2);
 		anomaly_scores(i, off_set+1) = cur_anomaly_scores(i);
 	end
 end
