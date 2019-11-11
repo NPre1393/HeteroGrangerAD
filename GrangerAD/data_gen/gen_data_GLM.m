@@ -16,6 +16,7 @@ dep2(1,2) = 1;
 %s = [s1 s2];
 G1 = digraph(dep1);
 G2 = digraph(dep2);
+
 for i = 1:5
     s1 = data_gen(3,2,dep1,dep2,200,100);
     save(['Datatest' num2str(i) '_3x300.txt'], 's1', '-double', '-ascii');

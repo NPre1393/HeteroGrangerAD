@@ -23,11 +23,7 @@ dep1(3,9) = 1;
 
 dep2(3,11) = 1;
 dep2(3,12) = 1;
-dists = [0,0,0,2,2,2,2,1,1,2,1,1];
-s1 = data_gen(12,2,dep1,dep2,200,100, dists);
 
-% dep1 = zeros(10);
-% dep2 = zeros(10);
 % dep1(1,7) = 1;
 % dep1(1,8) = 1;
 % dep1(1,9) = 1;
@@ -51,11 +47,11 @@ s1 = data_gen(12,2,dep1,dep2,200,100, dists);
 % dep2(3,6) = 1;
 % dep2(3,7) = 1;
 % dep2(3,8) = 1;
-% dists = [0,0,0,1,1,1,1,1,1,1];
-% s2 = data_gen(10,3,dep1,dep2,200,100,dists);
+
+dists = [0,0,0,2,2,2,2,1
+s1 = data_gen(10,3,dep1,dep2,200,100);
 %s2 = data_gen(10,3,dep2,100);
 %s = [s1 s2];
-
 G1 = digraph(dep1);
 G2 = digraph(dep2);
-save('Datatest5_10x300_2pois1gaus.txt', 's1', '-double', '-ascii');
+save('Datatest5_10x300.txt', 's1', '-double', '-ascii');

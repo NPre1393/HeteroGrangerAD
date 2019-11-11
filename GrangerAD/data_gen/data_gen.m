@@ -1,11 +1,13 @@
-function [series] = data_gen(features,lag,dependencies1,dependencies2,n1, n2)
+function [series] = data_gen(features,lag,dependencies1,dependencies2,n1,n2,dists)
 
-% features = 3
-% lag = 2
-% dependencies = 2
+% dists should contain a vector 1xfeatures to indicate which distribution
+% to generate the data with
+
+% ts length
+len = n1+n2;
 
 % allocate space for time series
-series = zeros(features, n1+n2);
+series = zeros(features, len);
 
 % find nonzero values in dependencies matrix C1
 [rowIdx, colIdx] = find(dependencies1~=0);
@@ -22,7 +24,7 @@ deps_per2 = sum(dependencies2,2);
 
 % set min/max values for coefficients -> strength of
 % dependencies
-coeff_min = 0.1;
+coeff_min = 0.6;
 coeff_max = 0.9;
 
 %coefficients = cell(features);
@@ -33,9 +35,28 @@ coeff_max = 0.9;
 for i = 1:features
     if ~ismember(i,deps)
         %series(i,:) = normrnd(rand, rand, [1,n1+n2]);
-        mu = 1+rand*(1000-1);
-        sigma = 1+rand*(1000-1);
-        series(i,:) = normrnd(mu, sigma, [1,n1+n2]);
+        if dists(i) == 1
+            %mu = 1+rand*(1000-1);
+            %sigma = 1+rand*(1000-1);
+            %series(i,:) = normrnd(mu, sigma, [1,n1+n2]);
+            mu = rand;
+            sigma = rand;
+            series(i,:) = normrnd(mu,sigma,1,len);
+        elseif dists(i) == 2
+            lambda = 1;
+            series(i,:) = poissrnd(lambda,1,len);
+        elseif dists(i) == 3
+            n = 1;
+            p = 0.5;
+            series(i,:) = binornd(n,p,1,len);
+        elseif dists(i) == 4
+            a = 1;
+            b = 1;
+            series(i,:) = gamrnd(a,b,1,len);
+        else 
+            error('data generator dists vector contains wrong values, only 1-4 allowed');
+        end
+            
     end
     
 end
@@ -57,6 +78,9 @@ for i = 1:deps_len
             % generates lagged values by multiplying dependency matrix
             % with the time series at t-lag:t to get correct values
             lagged_vals = nonzeros(dependencies1(deps(i),:).*series(:,j-lag:j-1)');
+            while length(lagged_vals) ~= deps_per(i)*lag
+                lagged_vals = [lagged_vals; 0];
+            end
             series(i,j) = sum(coeffs.*lagged_vals);
         end
     end
@@ -68,10 +92,13 @@ for i = 1:deps_len2
     % rounding to one decimal in range coeff_min to coeff_max
     coeffs = round(coeff_min+rand(deps_per2(i)*lag,1)*(coeff_max-coeff_min),1);
     % generate every value from 1 to n
-    for j = n1:n1+n2
+    for j = n1:len
         % generates lagged values by multiplying dependency matrix
         % with the time series at t-lag:t to get correct values
         lagged_vals = nonzeros(dependencies2(deps2(i),:).*series(:,j-lag:j-1)');
+        while length(lagged_vals) ~= deps_per2(i)*lag
+            lagged_vals = [lagged_vals; 0];
+        end
         series(i,j) = sum(coeffs.*lagged_vals);
     end
 end

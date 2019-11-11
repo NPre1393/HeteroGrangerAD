@@ -23,4 +23,5 @@ for i=1:row
 end
 
 anomaly_score = 0.5*sum + 0.5*sum_2;
+%anomaly_score = JSDiv(KL_1, KL_2);
 end

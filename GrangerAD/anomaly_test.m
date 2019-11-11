@@ -4,8 +4,8 @@ warning off;
 pctRunOnAll warning off;
 %Filename = "syn_data/Testdataset_760_Poisson3_Normal2_Features5.mat";
 %dir_name = 'C:\Users\Julien\Documents\Uni\Master\DataScience\pr\PR1\PR1\GrangerAD\GrangerAD\syn_data';
-dir_name = 'syn_data\gaussian_GAD';
-%dir_name = 'syn_data\gaussian_GAD_simple';
+%dir_name = 'syn_data\gaussian_GAD';
+dir_name = 'syn_data\gaussian_GAD_simple';
 %files = dir(fullfile(dir_name, '*.mat'));
 files = dir(fullfile(dir_name, '*.txt'));
 names = {files.name};
@@ -58,7 +58,7 @@ for j=1:5
     I_g=[];
     %I_n=series_mat.I_n;
     %I_p=series_mat.I_p;
-    I_n = 1:10;
+    I_n = 1:3;
     I_p = [];
     
 %% do anomaly detection with a sliding window:
@@ -66,17 +66,16 @@ for j=1:5
     %tic;
     [granger_ref_coeffs_N, granger_test_coeffs_N, granger_anomaly_scores_N,granger_threshs_N] = ...
             granger_glm_AD_sliding(series, L, 1:T1, T1+1-window+1:T1+1, T2-1, ...
-            alpha, lambda,I_n, I_p, I_g, I_B);
+            alpha, lambda, I_n, I_p, I_g, I_B);
 
-
-    save(['datatests/gaussian_GAD/anom_score_mu1mu2/GAD_noanom_sliding_JSD/',FinalResult num2str(j)  '_GLM_Result.mat']);
-    disp('Granger -N AD in progress...');  
-	[granger_ref_coeffs_N, granger_test_coeffs_N, granger_anomaly_scores_N, ...
-		granger_threshs_N] = ...
-		granger_lasso_AD_sliding(series, L, 1:T1, T1+1-window+1:T1+1, T2-1, ...
-        alpha, 1000, 2000, 800, 0);	
-    %alpha, 1000, 2000, 800, 0);
-        
-    save(['datatests/gaussian_GAD/anom_score_mu1mu2/GAD_noanom_sliding_JSD/',FinalResult num2str(j)  '_Lasso_Result.mat']);
+    save(['datatests/gaussian_GAD/anom_score_mu1mu2/simple_dep_noanom_sliding_JSD2/',FinalResult num2str(j)  '_GLM_Result.mat']);
+%     disp('Granger -N AD in progress...');  
+% 	[granger_ref_coeffs_N, granger_test_coeffs_N, granger_anomaly_scores_N, ...
+% 		granger_threshs_N] = ...
+% 		granger_lasso_AD_sliding(series, L, 1:T1, T1+1-window+1:T1+1, T2-1, ...
+%         alpha, 1000, 2000, 800, 0);	
+%     %alpha, 1000, 2000, 800, 0);
+%         
+%     save(['datatests/gaussian_GAD/anom_score_mu1mu2/GAD_noanom_sliding_JSD/',FinalResult num2str(j)  '_Lasso_Result.mat']);
 
 end
