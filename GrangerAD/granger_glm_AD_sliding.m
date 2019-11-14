@@ -1,6 +1,6 @@
 function [ref_coeffs, test_coeffs, anomaly_scores, anomaly_threshs] = ...
 	granger_glm_AD_sliding(time_series, lag, ref_indices, test_indices, ...
-	slide_times, alpha, lambda, I_n, I_p, I_g, I_B)
+	slide_times, alpha, lambda)
 % returns the coefficients on the reference data and test data, as well as
 %		the anomaly scores between reference data and test data
 % time_series: each time series forms a row of time_series
@@ -23,6 +23,7 @@ function [ref_coeffs, test_coeffs, anomaly_scores, anomaly_threshs] = ...
 % lambda2 = 10;
 %% process reference data
 %disp('training...');
+[I_n, I_p, I_g, I_B] = getDistributions(time_series);
 ref_series = time_series(:, ref_indices);
 [ref_coeffs, ~] = ts_lasso_regression(ref_series, lag, lambda, I_n, I_p, I_g, I_B);
 %% compute anomaly thresholds for each time series
@@ -64,7 +65,20 @@ for i = 1:p
 		sigma2 = sqrt(var(cur_ref_series(i,:)));
 		%ref_anomaly_scores(start) = max(myAnomalyScore(sigma1, sigma2, mu1, mu2), ...
 		%	myAnomalyScore(sigma2, sigma1, mu2, mu1));
-        ref_anomaly_scores(start) = GaussianAnomalyScore(cur_ref_series(i,:), sigma1, sigma2, mu1, mu2);
+        %ref_anomaly_scores(start) = GaussianAnomalyScore(cur_ref_series(i,:), sigma1, sigma2, mu1, mu2);
+        if ismember(i, I_n)==1
+      		ref_anomaly_scores(start) = GaussianAnomalyScore(cur_ref_series(i,:), sigma1, sigma2, mu1, mu2);
+        elseif ismember(i, I_p)==1  	
+       		ref_anomaly_scores(start) = PoissonAnomalyScore(cur_ref_series(i,:), mu1, mu2);
+        elseif ismember(i, I_g)==1  	
+            % TODO: calc gamma parameters for pdf a, b
+       		ref_anomaly_scores(start) = GammaAnomalyScore(cur_ref_series(i,:), 0, 0, 0, 0);    
+        elseif ismember(i, I_B)==1  
+            % TODO: calc binomial parameters for pdf n, p
+       		ref_anomaly_scores(start) = BernoulliAnomalyScore(cur_ref_series(i,:), 0, 0, 0, 0);
+        else 
+            ref_anomaly_scores(start) = max(myAnomalyScore(sigma1, sigma2, mu1, mu2),myAnomalyScore(sigma2, sigma1, mu2, mu1));
+        end
 	end
 	%hist(ref_anomaly_scores);
 	para = expfit(ref_anomaly_scores);
@@ -113,7 +127,19 @@ for off_set = 0 : slide_times
 		
 		%cur_anomaly_scores(i) = max(myAnomalyScore(sigma1, sigma2, mu1, mu2), ...
 		%	myAnomalyScore(sigma2, sigma1, mu2, mu1));
-        cur_anomaly_scores(i) = GaussianAnomalyScore(X_test, sigma1, sigma2, mu1, mu2);
+        if ismember(i, I_n)==1
+      		cur_anomaly_scores(i) = GaussianAnomalyScore(X_test, sigma1, sigma2, mu1, mu2);
+        elseif ismember(i, I_p)==1  	
+       		cur_anomaly_scores(i) = PoissonAnomalyScore(X_test, mu1, mu2);
+        elseif ismember(i, I_g)==1  	
+            % TODO: calc gamma parameters for pdf a, b
+       		cur_anomaly_scores(i) = GammaAnomalyScore(X_test, 0, 0, 0, 0);    
+        elseif ismember(i, I_B)==1  
+            % TODO: calc binomial parameters for pdf n, p
+       		cur_anomaly_scores(i) = BernoulliAnomalyScore(X_test, 0, 0, 0, 0);
+        else 
+            cur_anomaly_scores(i) = max(myAnomalyScore(sigma1, sigma2, mu1, mu2),myAnomalyScore(sigma2, sigma1, mu2, mu1));
+        end
 		anomaly_scores(i, off_set+1) = cur_anomaly_scores(i);
 	end
 end

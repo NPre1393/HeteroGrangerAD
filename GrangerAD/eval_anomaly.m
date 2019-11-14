@@ -9,8 +9,8 @@ h = 0;
 
 anomaly_mat = anomaly_scores;
 for i=1:n
-    anomaly_mat(i,anomaly_scores(i,:)>=thresholds(i))=1;
-    anomaly_mat(i,anomaly_scores(i,:)<thresholds(i))=0;
+    anomaly_mat(i,anomaly_scores(i,:)>thresholds(i))=1;
+    anomaly_mat(i,anomaly_scores(i,:)<=thresholds(i))=0;
 end
 
 %imagesc((1:m)+0.5, (1:n)+0.5,anomaly_mat);
