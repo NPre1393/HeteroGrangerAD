@@ -1,6 +1,6 @@
 clear all;
 %dir_name1 = 'datatests/gaussian_GAD/anom_score_mu1mu2/simple_dep_noanom_sliding'
-dir_name1 = 'datatests/gaussian_GAD/anom_score_mu1mu2/simple_dep_noanom_sliding_JSD2';
+dir_name1 = 'datatests/3pois1gauss1_p';
 %dir_name1 = 'datatests/gaussian_other_config';
 files = dir(fullfile(dir_name1, '*.mat'));
 names = {files.name};
@@ -18,10 +18,10 @@ L = 3;
 %lambda2 = 5;
 lambda1 = 4;
 alpha = 0.95;
-features = 12;
+features = 4;
 
 ground_truth = zeros(features, T2);
-ground_truth(1:3,1:100) = 1;
+ground_truth(1,1:100) = 1;
 %ground_truth = zeros(features, T2/window1);
 %ground_truth(1,1:10) = 1;
 %ground_truth(4:2:8,11) = 1;
@@ -38,11 +38,11 @@ ground_truth(1:3,1:100) = 1;
 % hold on;
 % plot(x, series(5,:), 'm');
 % hold off;
-f1_scores = zeros(1,features);
-precision = zeros(1,features);
-recall = zeros(1,features);
-
-for j = 1:2
+f1_scores = zeros(1,10);
+precision = zeros(1,10);
+recall = zeros(1,10);
+accuracy = zeros(1,10);
+for j = 1:10
     series_mat = load(char(names_cell(j)));
     series = series_mat.series;
     FinalResult = char(names(j));
@@ -50,8 +50,12 @@ for j = 1:2
     anom_thresholds = series_mat.granger_threshs_N;
     [anomaly_mat,~] = eval_anomaly(anom_scores, anom_thresholds, 0);
     %[anomaly_mat,~] = eval_anomaly_b(anom_scores, anom_thresholds, 0, window1);
-    [f1_scores(j), precision(j), recall(j)] = Fmeasure(anomaly_mat(1:3,:), ground_truth(1:3,:));
+    [f1_scores(j), precision(j), recall(j)] = Fmeasure(anomaly_mat(1,:), ground_truth(1,:));
+    %[f1_scores(j), precision(j), recall(j)] = Fmeasure(anomaly_mat, ground_truth);
+    %accuracy(j) = (T2-nnz(anomaly_mat))/100;
+
 end
 f1_scores
 precision
 recall
+%accuracy
