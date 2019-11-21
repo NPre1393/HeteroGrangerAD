@@ -5,7 +5,7 @@ pctRunOnAll warning off;
 %Filename = "syn_data/Testdataset_760_Poisson3_Normal2_Features5.mat";
 %dir_name = 'C:\Users\Julien\Documents\Uni\Master\DataScience\pr\PR1\PR1\GrangerAD\GrangerAD\syn_data';
 %dir_name = 'syn_data\gaussian_GAD';
-dir_name = 'syn_data\nodep_g';
+dir_name = 'syn_data\nodep';
 %files = dir(fullfile(dir_name, '*.mat'));
 files = dir(fullfile(dir_name, '*.txt'));
 names = {files.name};
@@ -19,9 +19,9 @@ window = 10;
 N = 7;
 % set lag as in Russel & Chiang:
 %L = 2;
-L = 2;
-lambda = 4;
-alpha = 0.95;
+L = 3;
+lambda = 10;
+alpha = 0.99;
 %Filename = "syn_data/Testdataset_760_Poisson5_Normal0_Features5.mat"
 %train_file = 'TE_process/d03.dat';
 %test_file = 'TE_process/d03_te.dat';
@@ -70,7 +70,7 @@ for j=1:5
             granger_glm_AD_sliding(series, L, 1:T1, T1+1-window+1:T1+1, T2-1, ...
             alpha, lambda);
 
-    save(['datatests/nodep_g/',FinalResult num2str(j)  '_GLM_Result.mat']);
+    save(['datatests/nodep_a99_w10/',FinalResult num2str(j)  '_GLM_Result.mat']);
     disp('Granger -N AD in progress...');  
 	[granger_ref_coeffs_N, granger_test_coeffs_N, granger_anomaly_scores_N, ...
 		granger_threshs_N] = ...
@@ -78,6 +78,6 @@ for j=1:5
         alpha, 1000, 2000, 800, 0);	
     %alpha, 1000, 2000, 800, 0);
         
-    save(['datatests/nodep_g/',FinalResult num2str(j)  '_Lasso_Result.mat']);
+    save(['datatests/nodep_a99_w10/',FinalResult num2str(j)  '_Lasso_Result.mat']);
 
 end

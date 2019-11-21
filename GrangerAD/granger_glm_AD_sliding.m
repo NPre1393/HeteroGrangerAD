@@ -68,6 +68,7 @@ for i = 1:p
         %ref_anomaly_scores(start) = GaussianAnomalyScore(cur_ref_series(i,:), sigma1, sigma2, mu1, mu2);
         if ismember(i, I_n)==1
       		ref_anomaly_scores(start) = GaussianAnomalyScore(cur_ref_series(i,:), sigma1, sigma2, mu1, mu2);
+            %ref_anomaly_scores(start) = max(myAnomalyScore(sigma1, sigma2, mu1, mu2),myAnomalyScore(sigma2, sigma1, mu2, mu1));
         elseif ismember(i, I_p)==1  	
        		ref_anomaly_scores(start) = PoissonAnomalyScore(cur_ref_series(i,:), mu1, mu2);
         elseif ismember(i, I_g)==1  	
