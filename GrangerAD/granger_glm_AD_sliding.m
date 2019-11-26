@@ -43,8 +43,6 @@ for i = 1:p
 	for start = 1:T1-window_size+1
  		cur_ref_series = ref_series(:, start:start+window_size-1);
 
- 		[cur_ref_coeffs, cur_PHI] = ...
-            ts_lasso_regression(cur_ref_series, lag, lambda, I_n, I_p, I_g, I_B);
  		%[cur_ref_coeffs, cur_PHI] = ...
         %    ts_lasso_regression(cur_ref_series, lag, lambda, I_n, I_p, I_g, I_B);
 
@@ -57,10 +55,10 @@ for i = 1:p
 % 		sigma2 = sqrt(resid * resid' / length(resid));
 % 		
 % 		
- 		mu1 = reshape(ref_coeffs{i}', [], 1)' * mean(cur_PHI)';
- 		mu2 = reshape(cur_ref_coeffs{i}', [], 1)' * mean(cur_PHI)';
- 		%mu1 = 0;
- 		%mu2 = 0;
+ 		%mu1 = reshape(ref_coeffs{i}', [], 1)' * mean(cur_PHI)';
+ 		%mu2 = reshape(cur_ref_coeffs{i}', [], 1)' * mean(cur_PHI)';
+ 		mu1 = 0;
+ 		mu2 = 0;
 
 		sigma2 = sqrt(var(cur_ref_series(i,:)));
 		%ref_anomaly_scores(start) = max(myAnomalyScore(sigma1, sigma2, mu1, mu2), ...
@@ -138,13 +136,13 @@ for off_set = 0 : slide_times
         elseif ismember(i, I_p)==1  	
        		cur_anomaly_scores(i) = PoissonAnomalyScore(X_test, mu1, mu2);
         elseif ismember(i, I_g)==1  	
-       		ref_anomaly_scores(start) = GammaAnomalyScore(cur_ref_series(i,:), sigma1, sigma2, mu1, mu2); 
+       		ref_anomaly_scores(start) = GammaAnomalyScore(X_test, sigma1, sigma2, mu1, mu2); 
         elseif ismember(i, I_B)==1  
-            n1 = length(ref_indices);
-            x1 = nnz(ref_series(i,:));
-            n2 = length(cur_ref_series)*length(I_B);
-            x2 = sum(sum(cur_ref_series == 1));
-       		ref_anomaly_scores(start) = BernoulliAnomalyScore(cur_ref_series(i,:), n1, x1, n2, x2);
+            n1 = length(test_series);
+            x1 = nnz(test_series(i,:));
+            n2 = length(X_test)*length(I_B);
+            x2 = sum(sum(X_test(I_B,:) == 1));
+       		ref_anomaly_scores(start) = BernoulliAnomalyScore(X_test, n1, x1, n2, x2);
         else 
             cur_anomaly_scores(i) = max(myAnomalyScore(sigma1, sigma2, mu1, mu2),myAnomalyScore(sigma2, sigma1, mu2, mu1));
         end

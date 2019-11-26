@@ -39,7 +39,7 @@ for i = 1:3
         names = {files.name};
         names_cell = strcat(dir_name, '\', names); 
     end 
-    for j=1:5
+    for j=1:1
     
     FinalResult = char(names(j))
     %FinalResult = 'TEP_d03';
