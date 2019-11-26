@@ -12,16 +12,20 @@ dep1(1,3) = 1;
 dep1(1,4) = 1;
 
 dep2(1,2) = 1;
-dep2(1,4) = 1;
+dep2(1,3) = 1;
 
 %s2 = data_gen(10,3,dep2,100);
 %s = [s1 s2];
 G1 = digraph(dep1);
 G2 = digraph(dep2);
-dists = [0,2,2,1];
+% 1 gaussian
+% 2 poisson
+% 3 binomial
+% 4 gamma
+dists = [0,3,3,4];
 %dists = [1,2];
 lag = 2;
 for i = 1:5
-    s1 = data_gen(features,lag,dep1,dep2,250,50,dists);
-    save(['Datatest' num2str(i) '_2x300_3p1g_t2.txt'], 's1', '-double', '-ascii');
+    s1 = data_gen(features,lag,dep1,dep2,200,100,dists);
+    save(['Datatest' num2str(i) '_4x300_2b1g_t1.txt'], 's1', '-double', '-ascii');
 end

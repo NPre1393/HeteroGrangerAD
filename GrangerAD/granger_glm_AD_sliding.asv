@@ -59,8 +59,8 @@ for i = 1:p
 % 		
  		mu1 = reshape(ref_coeffs{i}', [], 1)' * mean(cur_PHI)';
  		mu2 = reshape(cur_ref_coeffs{i}', [], 1)' * mean(cur_PHI)';
- 		%mu1 = 0;
- 		%mu2 = 0;
+ 		%mu1 = reshape(ref_coeffs{i}', [], 1)' * mean(cur_PHI)';
+ 		%mu2 = reshape(cur_ref_coeffs{i}', [], 1)' * mean(cur_PHI)';
 
 		sigma2 = sqrt(var(cur_ref_series(i,:)));
 		%ref_anomaly_scores(start) = max(myAnomalyScore(sigma1, sigma2, mu1, mu2), ...
@@ -77,11 +77,11 @@ for i = 1:p
             %ref_anomaly_scores(start) = GaussianAnomalyScore(cur_ref_series(i,:), sigma1, sigma2, mu1, mu2);
         elseif ismember(i, I_B)==1  
             % TODO: calc binomial parameters for pdf n, p
-            n1 = length(ref_indices);
+            n1 = T2;
             x1 = nnz(ref_series(i,:));
-            n2 = length(cur_ref_series)*length(I_B);
-            x2 = sum(sum(cur_ref_series(I_B,:) == 1));
-       		ref_anomaly_scores(start) = BernoulliAnomalyScore(cur_ref_series(i,:), n1, x1, n2, x2);
+            n2 = length(cur_ref_series);
+            x2 = ;
+       		ref_anomaly_scores(start) = BernoulliAnomalyScore(cur_ref_series(i,:), 0, 0, 0, 0);
         else 
             ref_anomaly_scores(start) = max(myAnomalyScore(sigma1, sigma2, mu1, mu2),myAnomalyScore(sigma2, sigma1, mu2, mu1));
         end
@@ -138,13 +138,11 @@ for off_set = 0 : slide_times
         elseif ismember(i, I_p)==1  	
        		cur_anomaly_scores(i) = PoissonAnomalyScore(X_test, mu1, mu2);
         elseif ismember(i, I_g)==1  	
-       		ref_anomaly_scores(start) = GammaAnomalyScore(cur_ref_series(i,:), sigma1, sigma2, mu1, mu2); 
+            % TODO: calc gamma parameters for pdf a, b
+       		cur_anomaly_scores(i) = GammaAnomalyScore(X_test, 0, 0, 0, 0);    
         elseif ismember(i, I_B)==1  
-            n1 = length(ref_indices);
-            x1 = nnz(ref_series(i,:));
-            n2 = length(cur_ref_series)*length(I_B);
-            x2 = sum(sum(cur_ref_series == 1));
-       		ref_anomaly_scores(start) = BernoulliAnomalyScore(cur_ref_series(i,:), n1, x1, n2, x2);
+            % TODO: calc binomial parameters for pdf n, p
+       		cur_anomaly_scores(i) = BernoulliAnomalyScore(X_test, 0, 0, 0, 0);
         else 
             cur_anomaly_scores(i) = max(myAnomalyScore(sigma1, sigma2, mu1, mu2),myAnomalyScore(sigma2, sigma1, mu2, mu1));
         end
