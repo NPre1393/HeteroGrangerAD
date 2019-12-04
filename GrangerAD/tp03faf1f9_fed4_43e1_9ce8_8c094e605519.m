@@ -45,8 +45,6 @@ for i = 1:p
 
  		[cur_ref_coeffs, cur_PHI] = ...
             ts_lasso_regression(cur_ref_series, lag, lambda, I_n, I_p, I_g, I_B);
- 		%[cur_ref_coeffs, cur_PHI] = ...
-        %    ts_lasso_regression(cur_ref_series, lag, lambda, I_n, I_p, I_g, I_B);
 
 % 		[~, T2] = size(cur_ref_series);
 % 		pred_values = zeros(1, T2-lag);
@@ -59,8 +57,8 @@ for i = 1:p
 % 		
  		mu1 = reshape(ref_coeffs{i}', [], 1)' * mean(cur_PHI)';
  		mu2 = reshape(cur_ref_coeffs{i}', [], 1)' * mean(cur_PHI)';
- 		%mu1 = reshape(ref_coeffs{i}', [], 1)' * mean(cur_PHI)';
- 		%mu2 = reshape(cur_ref_coeffs{i}', [], 1)' * mean(cur_PHI)';
+ 		%mu1 = 0;
+ 		%mu2 = 0;
 
 		sigma2 = sqrt(var(cur_ref_series(i,:)));
 		%ref_anomaly_scores(start) = max(myAnomalyScore(sigma1, sigma2, mu1, mu2), ...
@@ -77,11 +75,11 @@ for i = 1:p
             %ref_anomaly_scores(start) = GaussianAnomalyScore(cur_ref_series(i,:), sigma1, sigma2, mu1, mu2);
         elseif ismember(i, I_B)==1  
             % TODO: calc binomial parameters for pdf n, p
-            n1 = T2;
+            n1 = length(ref_indices);
             x1 = nnz(ref_series(i,:));
-            n2 = length(cur_ref_series);
-            x2 = ;
-       		ref_anomaly_scores(start) = BernoulliAnomalyScore(cur_ref_series(i,:), 0, 0, 0, 0);
+            n2 = length(cur_ref_series)*length(I_B);
+            x2 = sum(sum(cur_ref_series(I_B,:) == 1));
+       		ref_anomaly_scores(start) = BernoulliAnomalyScore(cur_ref_series(i,:), n1, x1, n2, x2);
         else 
             ref_anomaly_scores(start) = max(myAnomalyScore(sigma1, sigma2, mu1, mu2),myAnomalyScore(sigma2, sigma1, mu2, mu1));
         end
@@ -138,11 +136,13 @@ for off_set = 0 : slide_times
         elseif ismember(i, I_p)==1  	
        		cur_anomaly_scores(i) = PoissonAnomalyScore(X_test, mu1, mu2);
         elseif ismember(i, I_g)==1  	
-            % TODO: calc gamma parameters for pdf a, b
-       		cur_anomaly_scores(i) = GammaAnomalyScore(X_test, 0, 0, 0, 0);    
+       		ref_anomaly_scores(start) = GammaAnomalyScore(X_test, sigma1, sigma2, mu1, mu2); 
         elseif ismember(i, I_B)==1  
-            % TODO: calc binomial parameters for pdf n, p
-       		cur_anomaly_scores(i) = BernoulliAnomalyScore(X_test, 0, 0, 0, 0);
+            n1 = length(test_series);
+            x1 = nnz(test_series(i,:));
+            n2 = length(X_test)*length(I_B);
+            x2 = sum(sum(X_test(I_B,:) == 1));
+       		ref_anomaly_scores(start) = BernoulliAnomalyScore(X_test, n1, x1, n2, x2);
         else 
             cur_anomaly_scores(i) = max(myAnomalyScore(sigma1, sigma2, mu1, mu2),myAnomalyScore(sigma2, sigma1, mu2, mu1));
         end
@@ -189,7 +189,7 @@ function [AD_coeffs,PHI] = ts_lasso_regression(series, lag, lambda, I_n, I_p, I_
        
     %do regression with each time series as target
     
-    parfor target_row = 1:p
+    for target_row = 1:p
 %        runtime=toc;
 %        if runtime>60
 %            return;

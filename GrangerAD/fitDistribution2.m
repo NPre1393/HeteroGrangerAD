@@ -18,7 +18,7 @@ T = length(X);
 N = T - lag;
 
 % Compute the coding cost for various distributions and Sort the time series based on their coding cost!
-TS_Costs=zeros(4,4);
+TS_Costs=zeros(2,2);
 t = 0
 GLM_Model_B = 0
 t(1:N, 1) = X((lag+1):(lag+N));

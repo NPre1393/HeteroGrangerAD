@@ -134,7 +134,7 @@ function [coeffs, PHI] = ts_lasso_regression(series, lag, lambda)
 		end
 	end
 	%do regression with each time series as target
-	parfor target_row = 1:p
+	for target_row = 1:p
 		%X_test = normalize(X_test);
         t = zeros(N,1);
 		t(1:N, 1) = series(target_row, (lag+1):(lag+N))';
@@ -164,7 +164,7 @@ function [coeffs, PHI] = ...
 		end
 	end
 	%do regression with each time series as target
-	parfor target_row = 1:p
+	for target_row = 1:p
 		%X_test = normalize(X_test);
         t = zeros(N,1);
 		t(1:N, 1) = series(target_row, (lag+1):(lag+N))';

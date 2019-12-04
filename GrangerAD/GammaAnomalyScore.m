@@ -4,6 +4,8 @@ function anomaly_score = GammaAnomalyScore(X_test,  sigma1, sigma2, mu1, mu2)
 
 a1 = (mu1^2)/(sigma1^2);
 b1 = (sigma1^2)/mu1;
+a2 = (mu2^2)/(sigma2^2);
+b2 = (sigma2^2)/mu2;
 KL_1 = gampdf(X_test, a1, b1);
 KL_11 = log(2*gampdf(X_test,a1,b1)./(gampdf(X_test,a2,b2)+gampdf(X_test,a1,b1)))';
 KL_11(isnan(KL_11))=0;
@@ -16,8 +18,7 @@ for i=1:row
     sum = sum + KL_1(i,:)*KL_11(:,i);
 end
 
-a2 = (mu2^2)/(sigma2^2);
-b2 = (sigma2^2)/mu2;
+
 KL_2 = gampdf(X_test, a2, b2);
 KL_22 = log(2*gampdf(X_test,a2,b2)./(gampdf(X_test,a2,b2)+gampdf(X_test,a1,b1)))';
 KL_22(isnan(KL_22))=0;

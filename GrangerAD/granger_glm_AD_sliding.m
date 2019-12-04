@@ -43,8 +43,8 @@ for i = 1:p
 	for start = 1:T1-window_size+1
  		cur_ref_series = ref_series(:, start:start+window_size-1);
 
- 		%[cur_ref_coeffs, cur_PHI] = ...
-        %    ts_lasso_regression(cur_ref_series, lag, lambda, I_n, I_p, I_g, I_B);
+ 		[cur_ref_coeffs, cur_PHI] = ...
+            ts_lasso_regression(cur_ref_series, lag, lambda, I_n, I_p, I_g, I_B);
 
 % 		[~, T2] = size(cur_ref_series);
 % 		pred_values = zeros(1, T2-lag);
@@ -55,10 +55,10 @@ for i = 1:p
 % 		sigma2 = sqrt(resid * resid' / length(resid));
 % 		
 % 		
- 		%mu1 = reshape(ref_coeffs{i}', [], 1)' * mean(cur_PHI)';
- 		%mu2 = reshape(cur_ref_coeffs{i}', [], 1)' * mean(cur_PHI)';
- 		mu1 = 0;
- 		mu2 = 0;
+ 		mu1 = reshape(ref_coeffs{i}', [], 1)' * mean(cur_PHI)';
+ 		mu2 = reshape(cur_ref_coeffs{i}', [], 1)' * mean(cur_PHI)';
+ 		%mu1 = 0;
+ 		%mu2 = 0;
 
 		sigma2 = sqrt(var(cur_ref_series(i,:)));
 		%ref_anomaly_scores(start) = max(myAnomalyScore(sigma1, sigma2, mu1, mu2), ...
@@ -189,7 +189,7 @@ function [AD_coeffs,PHI] = ts_lasso_regression(series, lag, lambda, I_n, I_p, I_
        
     %do regression with each time series as target
     
-    parfor target_row = 1:p
+    for target_row = 1:p
 %        runtime=toc;
 %        if runtime>60
 %            return;

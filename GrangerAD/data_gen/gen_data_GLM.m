@@ -22,10 +22,10 @@ G2 = digraph(dep2);
 % 2 poisson
 % 3 binomial
 % 4 gamma
-dists = [0,3,3,4];
+dists = [0,4,4,4];
 %dists = [1,2];
 lag = 2;
 for i = 1:5
     s1 = data_gen(features,lag,dep1,dep2,200,100,dists);
-    save(['Datatest' num2str(i) '_4x300_2b1g_t1.txt'], 's1', '-double', '-ascii');
+    save(['syn_data/3ga/Datatest' num2str(i) '_4x300_3ga_t1.txt'], 's1', '-double', '-ascii');
 end

@@ -1,6 +1,6 @@
 clear all;
 %dir_name1 = 'datatests/gaussian_GAD/anom_score_mu1mu2/simple_dep_noanom_sliding'
-dir_name1 = 'datatests/2ga1p_t2';
+dir_name1 = 'datatests/3p1g_t1';
 %dir_name1 = 'datatests/gaussian_other_config';
 files = dir(fullfile(dir_name1, '*.mat'));
 names = {files.name};
@@ -38,11 +38,11 @@ ground_truth(1,1:100) = 1;
 % hold on;
 % plot(x, series(5,:), 'm');
 % hold off;
-f1_scores = zeros(1,10);
-precision = zeros(1,10);
-recall = zeros(1,10);
-accuracy = zeros(1,10);
-for j = 1:1
+f1_scores = zeros(1,5);
+precision = zeros(1,5);
+recall = zeros(1,5);
+accuracy = zeros(1,5);
+for j = 1:10
     series_mat = load(char(names_cell(j)));
     series = series_mat.series;
     FinalResult = char(names(j));
@@ -55,7 +55,21 @@ for j = 1:1
     %accuracy(j) = ((T2*features)-nnz(anomaly_mat))/(T2*features);
 
 end
+
+glm = 0;
+lasso = 0;
+
+for i = 1:10
+    if mod(i,2)
+        glm = glm + f1_scores(i);
+    else 
+        lasso = lasso + f1_scores(i);
+    end
+end
 f1_scores
-precision
-recall
+%precision
+%recall
+glm/5
+lasso/5
+
 %accuracy

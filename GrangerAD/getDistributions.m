@@ -1,6 +1,5 @@
 function [I_n, I_p, I_g, I_B] = getDistributions(series)
-
-warning off;
+%warning off;
 
 % set a random lag less than 5
 L = round(4*rand()+1);
