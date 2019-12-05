@@ -1,6 +1,6 @@
 function [ref_coeffs, test_coeffs, anomaly_scores, anomaly_threshs] = ...
 	granger_glm_AD_sliding(time_series, lag, ref_indices, test_indices, ...
-	slide_times, alpha, lambda)
+	slide_times, alpha, lambda, p1)
 % returns the coefficients on the reference data and test data, as well as
 %		the anomaly scores between reference data and test data
 % time_series: each time series forms a row of time_series
@@ -28,6 +28,7 @@ ref_series = time_series(:, ref_indices);
 [ref_coeffs, ~] = ts_lasso_regression(ref_series, lag, lambda, I_n, I_p, I_g, I_B);
 %% compute anomaly thresholds for each time series
 [p,T1] = size(ref_series);
+p = p1;
 anomaly_threshs = zeros(p, 1);
 window_size = length(test_indices);
 for i = 1:p
@@ -75,11 +76,7 @@ for i = 1:p
             %ref_anomaly_scores(start) = GaussianAnomalyScore(cur_ref_series(i,:), sigma1, sigma2, mu1, mu2);
         elseif ismember(i, I_B)==1  
             % TODO: calc binomial parameters for pdf n, p
-            n1 = length(ref_indices);
-            x1 = nnz(ref_series(i,:));
-            n2 = length(cur_ref_series)*length(I_B);
-            x2 = sum(sum(cur_ref_series(I_B,:) == 1));
-       		ref_anomaly_scores(start) = BernoulliAnomalyScore(cur_ref_series(i,:), n1, x1, n2, x2);
+       		ref_anomaly_scores(start) = BernoulliAnomalyScore(cur_ref_series(i,:), 1, 1, mu1, mu2);
         else 
             ref_anomaly_scores(start) = max(myAnomalyScore(sigma1, sigma2, mu1, mu2),myAnomalyScore(sigma2, sigma1, mu2, mu1));
         end
@@ -138,11 +135,7 @@ for off_set = 0 : slide_times
         elseif ismember(i, I_g)==1  	
        		ref_anomaly_scores(start) = GammaAnomalyScore(X_test, sigma1, sigma2, mu1, mu2); 
         elseif ismember(i, I_B)==1  
-            n1 = length(test_series);
-            x1 = nnz(test_series(i,:));
-            n2 = length(X_test)*length(I_B);
-            x2 = sum(sum(X_test(I_B,:) == 1));
-       		ref_anomaly_scores(start) = BernoulliAnomalyScore(X_test, n1, x1, n2, x2);
+       		ref_anomaly_scores(start) = BernoulliAnomalyScore(X_test, 1, 1, mu1, mu2);
         else 
             cur_anomaly_scores(i) = max(myAnomalyScore(sigma1, sigma2, mu1, mu2),myAnomalyScore(sigma2, sigma1, mu2, mu1));
         end
@@ -189,7 +182,7 @@ function [AD_coeffs,PHI] = ts_lasso_regression(series, lag, lambda, I_n, I_p, I_
        
     %do regression with each time series as target
     
-    for target_row = 1:p
+    parfor target_row = 1:p
 %        runtime=toc;
 %        if runtime>60
 %            return;

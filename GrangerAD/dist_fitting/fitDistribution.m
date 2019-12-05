@@ -19,8 +19,8 @@ N = T - lag;
 
 % Compute the coding cost for various distributions and Sort the time series based on their coding cost!
 TS_Costs=zeros(4,4);
-t = 0
-GLM_Model_B = 0
+%t = 0;
+%GLM_Model_B = 0;
 t(1:N, 1) = X((lag+1):(lag+N));
 PHI=InfoMatrix(X,lag);
 
@@ -41,10 +41,10 @@ switch dtype(1:4)
         end
         if TS_Costs(2,1)<TS_Costs(2,3)
             Best_dist = 1;
-            %display('Fitting Distribution is Normal');
+            display('Fitting Distribution is Normal');
         else
             Best_dist = 3;
-            %display('Fitting Distribution is Gamma');
+            display('Fitting Distribution is Gamma');
         end
         
     case 'disc'
@@ -64,9 +64,9 @@ switch dtype(1:4)
         
         if TS_Costs(2,2)<TS_Costs(2,4)
             Best_dist = 2;
-            %display('Fitting Distribution is Poisson');
+            display('Fitting Distribution is Poisson');
         else
             Best_dist = 4;
-            %display('Fitting Distribution is Bernoulli');
+            display('Fitting Distribution is Bernoulli');
         end
 end

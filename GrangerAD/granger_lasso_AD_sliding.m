@@ -1,6 +1,6 @@
 function [ref_coeffs, test_coeffs, anomaly_scores, anomaly_threshs] = ...
 	granger_lasso_AD_sliding(time_series, lag, ref_indices, test_indices, ...
-	slide_times, alpha, lambda, lambda1, lambda2, NC)
+	slide_times, alpha, lambda, lambda1, lambda2, NC,p1)
 % returns the coefficients on the reference data and test data, as well as
 %		the anomaly scores between reference data and test data
 % time_series: each time series forms a row of time_series
@@ -27,6 +27,7 @@ ref_series = time_series(:, ref_indices);
 [ref_coeffs, ~] = ts_lasso_regression(ref_series, lag, lambda);
 %% compute anomaly thresholds for each time series
 [p,T1] = size(ref_series);
+p = p1;
 anomaly_threshs = zeros(p, 1);
 window_size = length(test_indices);
 for i = 1:p
@@ -164,7 +165,7 @@ function [coeffs, PHI] = ...
 		end
 	end
 	%do regression with each time series as target
-	for target_row = 1:p
+	parfor target_row = 1:p
 		%X_test = normalize(X_test);
         t = zeros(N,1);
 		t(1:N, 1) = series(target_row, (lag+1):(lag+N))';

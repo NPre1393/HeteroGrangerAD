@@ -1,6 +1,4 @@
-function anomaly_score = BernoulliAnomalyScore(X_test, n1, x1, n2, x2)
-p1 = binofit(x1,n1);
-p2 = binofit(x2,n2);
+function anomaly_score = BernoulliAnomalyScore(X_test, n1, n2, p1, p2)
 
 KL_1 = binopdf(X_test, n1,p1);
 KL_11 = log(2*binopdf(X_test, n1,p1)./(binopdf(X_test, n2,p2)+binopdf(X_test, n1,p1)))';

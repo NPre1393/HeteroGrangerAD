@@ -1,4 +1,4 @@
-function [series] = data_gen(features,lag,dependencies1,dependencies2,n1,n2,dists)
+function [series] = data_gen(features,lag,dependencies1,dependencies2,n1,n2,dists,coeff_min, coeff_max)
 
 % dists should contain a vector 1xfeatures to indicate which distribution
 % to generate the data with
@@ -24,8 +24,8 @@ deps_per2 = sum(dependencies2,2);
 
 % set min/max values for coefficients -> strength of
 % dependencies
-coeff_min = 0.6;
-coeff_max = 0.9;
+%coeff_min = 0.6;
+%coeff_max = 0.9;
 
 %coefficients = cell(features);
 
